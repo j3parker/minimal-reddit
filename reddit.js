@@ -92,7 +92,7 @@ http.createServer(function (req, res) {
     return;
   }
   res.writeHead(200, {'Content-Type': 'text/html'});
-  res.write("<html><head><title>Minimal Reddit</title></head><body>");
+  res.write("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/><title>Minimal Reddit</title></head><body>");
   var reddits = "/r" + url.parse(req.url).href;
   if(reddits[reddits.length - 1] === '/') reddits = reddits.slice(0, reddits.length - 1);
   reddits += ".json";
