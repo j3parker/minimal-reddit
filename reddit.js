@@ -108,7 +108,7 @@ function renderComments(blob, res, url) {
 
 function style(res) {
   res.write("<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow|PT+Serif' rel='stylesheet' type='text/css'>");
-  res.write("<style>span { margin-bottom: 0; font-size: 250%; font-family: 'PT Sans Narrow', sans-serif; text-transform:uppercase; font-weight: bolder; } a:link { color: #369; text-decoration: none; } a:hover { text-decoration: underline; } a:visited { color: #737; } body { margin-left:10%; margin-right: 10%; background-color: #EBEBEB; font-family: 'PT Serif', serif; }</style>");
+  res.write("<style>span { margin-bottom: 0; font-size: 250%; font-family: 'PT Sans Narrow', sans-serif; font-weight: bolder; } a:link { color: #369; text-decoration: none; } a:hover { text-decoration: underline; } a:visited { color: #737; } body { margin-left:10%; margin-right: 10%; background-color: #EBEBEB; font-family: 'PT Serif', serif; }</style>");
 }
 
 function send404(res) {
