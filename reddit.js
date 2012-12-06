@@ -11,9 +11,15 @@ function renderListing(blob, res, url) {
   try {
     data = JSON.parse(blob);
     for(var i = 0; i < data.data.children.length; i++) {
-      var story = data.data.children[i];
-      res.write('<span><a href="' + story.data.url + '">' + story.data.title + '</a></span><br>' + 
-          '[' + story.data.num_comments + ' <a href="' + webRoot + story.data.permalink.slice(2) + '">comments</a>] ' + story.data.subreddit + ' (' + story.data.domain + ')' +
+      var story = data.data.children[i].data;
+      var url;
+      if(story.is_self) {
+        url = webRoot + story.permalink.slice(2);
+      } else {
+        url = story.url;
+      }
+      res.write('<span><a href="' + url + '">' + story.title + '</a></span><br>' + 
+          '[' + story.num_comments + ' <a href="' + webRoot + story.permalink.slice(2) + '">comments</a>] ' + story.subreddit + ' (' + story.domain + ')' +
           '<br><br>');
     }
     if (data.data.after) {
