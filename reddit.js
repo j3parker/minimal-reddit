@@ -37,12 +37,10 @@ function unescapeHtml(text) {
 
 function startIndent(res) {
   res.write('<blockquote>');
-//  res.write('<table><tr><td>&nbsp;</td><td>');
 }
 
 function endIndent(res) {
   res.write('</blockquote>');
-//  res.write('</td></tr></table>');
 }
 
 function author(user) {
@@ -53,15 +51,15 @@ function doComment(c, res) {
   res.write(author(c.author));
   res.write(unescapeHtml(c.body_html).replace("<p>", ""));
   if(typeof c.replies.data !== 'undefined') {
+    startIndent(res);
     for(var i = 0; i < c.replies.data.children.length; i++) {
-      startIndent(res);
       if(c.replies.data.children[i].kind === "more") {
         res.write("<b>Thread truncated</b>");
       } else {
         doComment(c.replies.data.children[i].data, res);
       }
-      endIndent(res);
     }
+    endIndent(res);
   }
   res.write('</td></tr></table>');
 }
