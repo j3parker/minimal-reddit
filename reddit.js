@@ -12,13 +12,13 @@ function renderListing(blob, res, url) {
     data = JSON.parse(blob);
     for(var i = 0; i < data.data.children.length; i++) {
       var story = data.data.children[i].data;
-      var url;
+      var story_url;
       if(story.is_self) {
-        url = webRoot + story.permalink.slice(2);
+        story_url = webRoot + story.permalink.slice(2);
       } else {
-        url = story.url;
+        story_url = story.url;
       }
-      res.write('<span><a href="' + url + '">' + story.title + '</a></span><br>' + 
+      res.write('<span><a href="' + story_url + '">' + story.title + '</a></span><br>' + 
           '[' + story.num_comments + ' <a href="' + webRoot + story.permalink.slice(2) + '">comments</a>] ' + story.subreddit + ' (' + story.domain + ')' +
           '<br><br>');
     }
