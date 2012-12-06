@@ -7,14 +7,17 @@ function endPage(res, x) {
   res.end(x + '</body></html>');
 }
 
-function renderListing(blob, res) {
+function renderListing(blob, res, url) {
   try {
     data = JSON.parse(blob);
     for(var i = 0; i < data.data.children.length; i++) {
       var story = data.data.children[i];
-      res.write('<a href="' + story.data.url + '">' + story.data.title + '</a> (' + story.data.domain + ') <br>' + 
+      res.write('<a href="' + story.data.url + '">' + story.data.title + '</a> (' + story.data.domain + ') <br>' +
           '[' + story.data.num_comments + ' <a href="' + webRoot + story.data.permalink.slice(2) + '">comments</a>] ' + story.data.subreddit +
           '<br><br>');
+    }
+    if (data.data.after) {
+      res.write("<a href=\"" + url + "?after=" + data.data.after + "\">Next page</a><br>");
     }
     endPage(res);
   } catch(e) {
@@ -70,7 +73,7 @@ function doComment(c, res) {
   res.write('</td></tr></table>');
 }
 
-function renderComments(blob, res) {
+function renderComments(blob, res, url) {
   try {
     data = JSON.parse(blob);
     var post = data[0].data.children[0].data;
@@ -101,9 +104,14 @@ http.createServer(function (req, res) {
   }
   res.writeHead(200, {'Content-Type': 'text/html'});
   res.write("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/><title>Minimal Reddit</title></head><body>");
-  var reddits = "/r" + url.parse(req.url).href;
+  var reddit_url = url.parse(req.url, true);
+  var reddits = "/r" + reddit_url.pathname;
+  var query_param = reddit_url.query;
   if(reddits[reddits.length - 1] === '/') reddits = reddits.slice(0, reddits.length - 1);
   reddits += ".json";
+  if (query_param.after) {
+    reddits += "?after=" + query_param.after;
+  }
   console.log("Request for " + reddits);
 
   var render = reddits.indexOf("/comments/") == -1 ? renderListing : renderComments;
@@ -116,7 +124,7 @@ http.createServer(function (req, res) {
                            r.setEncoding();
                            var blob = "";
                            r.on('data', function(chunk) { blob += chunk; });
-                           r.on('end', function() { render(blob, res); });
+                           r.on('end', function() { render(blob, res, reddit_url.pathname); });
                          });
 
   r.on('error', function(e) {
