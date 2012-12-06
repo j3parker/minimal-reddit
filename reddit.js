@@ -85,7 +85,7 @@ function renderComments(blob, res, url) {
     var post = data[0].data.children[0].data;
     res.write('<span><a href="' + post.url + '">' + post.title + '</a></span><br>');
     res.write('Posted in <a href="../../../">' + post.subreddit + '</a> by ' + author(post.author) + '<br>');
-    if(post.is_self && post.selftext_html !== "") {
+    if(post.is_self && post.selftext_html != null) {
       res.write("<hr>");
       res.write(unescapeHtml(post.selftext_html));
       res.write("<hr>");
