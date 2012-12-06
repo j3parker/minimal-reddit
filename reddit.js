@@ -46,6 +46,11 @@ function endIndent(res) {
 function author(user) {
   return '<a href="http://reddit.com/user/' + user + '">' + user + '</a><br>';
 }
+
+function truncated(res) {
+  res.write("<b>Thread truncated</b>");
+}
+
 function doComment(c, res) {
   res.write("<p>");
   res.write(author(c.author));
@@ -54,7 +59,7 @@ function doComment(c, res) {
     startIndent(res);
     for(var i = 0; i < c.replies.data.children.length; i++) {
       if(c.replies.data.children[i].kind === "more") {
-        res.write("<b>Thread truncated</b>");
+        truncated(res);
       } else {
         doComment(c.replies.data.children[i].data, res);
       }
@@ -72,7 +77,11 @@ function renderComments(blob, res) {
     res.write('Posted in <a href="../../../">' + post.subreddit + '</a> by ' + author(post.author) + '<br>');
     startIndent(res);
     for(var i = 0; i < data[1].data.children.length; i++) {
-      doComment(data[1].data.children[i].data, res);
+      if(data[1].data.children[i].kind === "more") {
+        truncated(res);
+      } else {
+        doComment(data[1].data.children[i].data, res);
+      }
       res.write('----');
     }
     endIndent(res);
