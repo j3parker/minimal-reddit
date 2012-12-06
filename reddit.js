@@ -107,6 +107,9 @@ http.createServer(function (req, res) {
 
   var render = reddits.indexOf("/comments/") == -1 ? renderListing : renderComments;
   var r = http.request({ host: 'www.reddit.com',
+                         headers: {
+                           'User-Agent': 'Minimal reddit mod v1.0 by j@cob.xxx'
+                         },
                          path: reddits },
                          function(r) {
                            r.setEncoding();
