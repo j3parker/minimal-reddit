@@ -1,5 +1,6 @@
 var http = require('http');
 var url = require('url');
+var webRoot = "/r";
 
 function endPage(res, x) {
   x = x || "";
@@ -12,7 +13,7 @@ function renderListing(blob, res) {
     for(var i = 0; i < data.data.children.length; i++) {
       var story = data.data.children[i];
       res.write('<a href="' + story.data.url + '">' + story.data.title + '</a> (' + story.data.domain + ') <br>' + 
-          '[' + story.data.num_comments + ' <a href="' + story.data.permalink.slice(2) + '">comments</a>] ' + story.data.subreddit +
+          '[' + story.data.num_comments + ' <a href="' + webRoot + story.data.permalink.slice(2) + '">comments</a>] ' + story.data.subreddit +
           '<br><br>');
     }
     endPage(res);
