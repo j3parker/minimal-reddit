@@ -12,8 +12,8 @@ function renderListing(blob, res) {
     data = JSON.parse(blob);
     for(var i = 0; i < data.data.children.length; i++) {
       var story = data.data.children[i];
-      res.write('<a href="' + story.data.url + '">' + story.data.title + '</a> (' + story.data.domain + ') <br>' + 
-          '[' + story.data.num_comments + ' <a href="' + webRoot + story.data.permalink.slice(2) + '">comments</a>] ' + story.data.subreddit +
+      res.write('<h3><a href="' + story.data.url + '">' + story.data.title + '</a></h3>' + 
+          '[' + story.data.num_comments + ' <a href="' + webRoot + story.data.permalink.slice(2) + '">comments</a>] (' + story.data.subreddit + story.data.domain + ')' +
           '<br><br>');
     }
     endPage(res);
@@ -74,7 +74,7 @@ function renderComments(blob, res) {
   try {
     data = JSON.parse(blob);
     var post = data[0].data.children[0].data;
-    res.write('<a href="' + post.url + '">' + post.title + '</a><br>');
+    res.write('<h3><a href="' + post.url + '">' + post.title + '</a></h3>');
     res.write('Posted in <a href="../../../">' + post.subreddit + '</a> by ' + author(post.author) + '<br>');
     startIndent(res);
     for(var i = 0; i < data[1].data.children.length; i++) {
@@ -92,16 +92,27 @@ function renderComments(blob, res) {
   }
 }
 
+function style(res) {
+  res.write("<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow|PT+Serif' rel='stylesheet' type='text/css'>");
+  res.write("<style>h3 { margin-bottom: 0; font-size: 200%; font-family: 'PT Sans Narrow', sans-serif; text-transform:uppercase; text-weight: normal; } a:link { color: #369; text-decoration: none; } a:hover { text-decoration: underline; } a:visited { color: #737; } body { background-color: #EBEBEB; font-family: 'PT Serif', serif; }</style>");
+}
+
 http.createServer(function (req, res) {
-  if(url.parse(req.url).href === '/favicon.ico') {
+  var uri = url.parse(req.url).href;
+  if(uri === '/favicon.ico') {
     res.writeHead(404, {'Content-Type': 'text/plain'});
     res.write('404 Not Found\n');
     res.end();
     return;
   }
+  if(uri === '/') {
+    uri = '/programming+truereddit+literature';
+  }
   res.writeHead(200, {'Content-Type': 'text/html'});
-  res.write("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/><title>Minimal Reddit</title></head><body>");
-  var reddits = "/r" + url.parse(req.url).href;
+  res.write("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>"); 
+  style(res);
+  res.write("<title>Minimal Reddit</title></head><body>");
+  var reddits = "/r" + uri;
   if(reddits[reddits.length - 1] === '/') reddits = reddits.slice(0, reddits.length - 1);
   reddits += ".json";
   console.log("Request for " + reddits);
