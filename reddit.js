@@ -12,7 +12,7 @@ function renderListing(blob, res, url) {
     data = JSON.parse(blob);
     for(var i = 0; i < data.data.children.length; i++) {
       var story = data.data.children[i];
-      res.write('<h3><a href="' + story.data.url + '">' + story.data.title + '</a></h3>' + 
+      res.write('<span><a href="' + story.data.url + '">' + story.data.title + '</a></span><br>' + 
           '[' + story.data.num_comments + ' <a href="' + webRoot + story.data.permalink.slice(2) + '">comments</a>] ' + story.data.subreddit + ' (' + story.data.domain + ')' +
           '<br><br>');
     }
@@ -77,7 +77,7 @@ function renderComments(blob, res, url) {
   try {
     data = JSON.parse(blob);
     var post = data[0].data.children[0].data;
-    res.write('<h3><a href="' + post.url + '">' + post.title + '</a></h3>');
+    res.write('<span><a href="' + post.url + '">' + post.title + '</a></span><br>');
     res.write('Posted in <a href="../../../">' + post.subreddit + '</a> by ' + author(post.author) + '<br>');
     startIndent(res);
     for(var i = 0; i < data[1].data.children.length; i++) {
@@ -97,7 +97,7 @@ function renderComments(blob, res, url) {
 
 function style(res) {
   res.write("<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow|PT+Serif' rel='stylesheet' type='text/css'>");
-  res.write("<style>h3 { margin-bottom: 0; font-size: 200%; font-family: 'PT Sans Narrow', sans-serif; text-transform:uppercase; text-weight: normal; } a:link { color: #369; text-decoration: none; } a:hover { text-decoration: underline; } a:visited { color: #737; } body { background-color: #EBEBEB; font-family: 'PT Serif', serif; }</style>");
+  res.write("<style>span { margin-bottom: 0; font-size: 250%; font-family: 'PT Sans Narrow', sans-serif; text-transform:uppercase; font-weight: bolder; } a:link { color: #369; text-decoration: none; } a:hover { text-decoration: underline; } a:visited { color: #737; } body { margin-left:10%; margin-right: 10%; background-color: #EBEBEB; font-family: 'PT Serif', serif; }</style>");
 }
 
 function send404(res) {
